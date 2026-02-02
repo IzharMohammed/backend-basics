@@ -73,7 +73,23 @@ router.post("/users",
     }
   })
 
+router.put("/users/:id",
+  [
+    param("id").notEmpty().withMessage("id is required"),
+    body("name").notEmpty().withMessage("Name cannot be empty"),
+    body("email").optional().isEmail().withMessage("valid email is required")
+  ]
+  , (req: Request, res: Response) => {
+    try {
 
+    } catch (error) {
+      return res.json({
+        error: "SystemError",
+        message: "Internal Server Error",
+        statusCode: 500
+      })
+    }
+  })
 
 router.delete("/users/:id", (req, res) => {
 
