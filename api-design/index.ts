@@ -1,8 +1,14 @@
 import express, { type Request, type Response } from "express";
 import compression from "compression"
 import { body, param } from "express-validator";
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
+
 const app = express();
 const port = process.env.PORT || 4000;
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Parses json request body
 app.use(express.json())
