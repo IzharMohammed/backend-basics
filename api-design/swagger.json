@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/users": {
+    "/api/v1/users": {
       "get": {
         "tags": ["Users"],
         "summary": "Get all users",
@@ -120,7 +120,7 @@
         }
       }
     },
-    "/users/{id}": {
+    "/api/v1/users/{id}": {
       "get": {
         "tags": ["Users"],
         "summary": "Get user by ID",

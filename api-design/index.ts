@@ -2,7 +2,7 @@ import express, { type Request, type Response } from "express";
 import compression from "compression"
 import { body, param } from "express-validator";
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json';
+import swaggerDocument from './swagger.json' with {type: "json"};
 import { randomUUID } from "node:crypto";
 
 const app = express();
@@ -32,7 +32,9 @@ type User = {
   name: string,
   email: string,
 }
-let users: User[] = [];
+let users: User[] = [
+  { email: "test", name: "izhar", id: "1" }
+];
 
 router.get("/users", (req, res) => {
   res.send(users);
@@ -83,7 +85,7 @@ router.post("/users",
         email,
         name
       }
-      
+
       users.push(newUser);
       res.status(201).json(newUser)
     } catch (error) {
@@ -114,6 +116,10 @@ router.put("/users/:id",
         })
       }
       const updatedUser = { ...users[userIndex], name, email };
+      console.log({ ...users[userIndex] });
+
+      console.log("updatedUser", updatedUser);
+
       users[userIndex] = updatedUser;
       res.status(200).json(updatedUser)
     } catch (error) {
@@ -151,6 +157,8 @@ router.delete("/users/:id",
     }
   })
 
+app.use("/api/v1", router)
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`server listening on port ${port}`);
 });
