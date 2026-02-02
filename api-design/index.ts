@@ -81,7 +81,19 @@ router.put("/users/:id",
   ]
   , (req: Request, res: Response) => {
     try {
-
+      const { name, email } = req.body;
+      const { id } = req.params;
+      const userIndex = users.findIndex(u => u.id === id)
+      if (userIndex === -1) {
+        return res.status(404).json({
+          error: "NotFound",
+          message: "User not found",
+          statusCode: 404
+        })
+      }
+      const updatedUser = { ...users[userIndex], name, email };
+      users[userIndex] = updatedUser;
+      res.status(200).json(updatedUser)
     } catch (error) {
       return res.json({
         error: "SystemError",
@@ -91,12 +103,31 @@ router.put("/users/:id",
     }
   })
 
-router.delete("/users/:id", (req, res) => {
-
-})
-
-
-
+router.delete("/users/:id",
+  [
+    param("id").notEmpty().withMessage("id is required")
+  ]
+  , (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      const userIndex = users.findIndex(u => u.id === id);
+      if (userIndex === -1) {
+        return res.status(404).json({
+          error: "NotFound",
+          message: "User not found",
+          statusCode: 404
+        })
+      }
+      const updatedUser = users.filter(user => user.id !== id)
+      res.status(200).json(updatedUser)
+    } catch (error) {
+      return res.json({
+        error: "SystemError",
+        message: "Internal Server Error",
+        statusCode: 500
+      })
+    }
+  })
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
