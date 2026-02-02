@@ -55,6 +55,24 @@ router.get("/users/:id", [
   }
 })
 
+router.post("/users",
+  [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("email").isEmail().withMessage("valid email is required")
+  ]
+  , (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    try {
+      users.push({ name, email });
+    } catch (error) {
+      return res.json({
+        error: "SystemError",
+        message: "Internal Server Error",
+        statusCode: 500
+      })
+    }
+  })
+
 
 
 router.delete("/users/:id", (req, res) => {
