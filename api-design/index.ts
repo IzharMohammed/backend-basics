@@ -3,6 +3,7 @@ import compression from "compression"
 import { body, param } from "express-validator";
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
+import { randomUUID } from "node:crypto";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -69,7 +70,22 @@ router.post("/users",
   , (req: Request, res: Response) => {
     const { name, email } = req.body;
     try {
-      users.push({ name, email });
+      const existingUser = users.find(u => u.email === email);
+      if (existingUser) {
+        return res.status(409).json({
+          error: "conflict",
+          message: "User with this email already exists",
+          statusCode: 409,
+        })
+      }
+      const newUser: User = {
+        id: randomUUID(),
+        email,
+        name
+      }
+      
+      users.push(newUser);
+      res.status(201).json(newUser)
     } catch (error) {
       return res.json({
         error: "SystemError",
