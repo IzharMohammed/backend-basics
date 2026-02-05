@@ -80,6 +80,7 @@ router.post("/users",
           statusCode: 409,
         })
       }
+
       const newUser: User = {
         id: randomUUID(),
         email,
